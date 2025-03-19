@@ -2,7 +2,7 @@
 <Author Name>
 Created Febraury 23, 2025
 
-//If using linux, change "_getwch()" to "getch()"
+//Program now validates registration input ( Eror message if not 'Y' or 'N')
 
 NWC Complete MAIN UI
 - Account Registration
@@ -296,21 +296,30 @@ int main()
 /***************************** MAIN UI **************************/
 
 //Structure for all customer data (required for login and registration)
-struct customer
-{
-    char customerID[9];
-    char firstname[max_length];
-    char lastname[max_length];
-    char email[max_length];
-    char password[password_length + 1];
-};
+    typedef struct 
+    {
+        char customerID[9];
+        char firstname[max_length];
+        char lastname[max_length];
+        char email[max_length];
+        char password[password_length + 1];
+    }customer;
     
     //Are you a registered user?
     printf("\n\nAre you a registered user? \n'Y' for yes\n'N' for no\n\n");
     scanf(" %c", &registered);
     
+    while(registered!='N'&&registered!='N'&&registered!='Y'&&registered!='y')
+    {
+        fflush(stdin);
+        system(clear_terminal);
+        printf(bold_start"\n\n-Invalid input-"bold_end);
+        printf("\n\nAre you a registered user? \n'Y' for yes\n'N' for no\n\n");
+        scanf(" %c", &registered);
+    }
+    
     //structure variable <user>
-    struct customer user;
+    customer user;
     
     //CREATING NEW ACCOUNT
     if(registered=='N' || registered=='n')
@@ -528,7 +537,7 @@ struct customer
 void admin_terminal(char *terminal_clear_string)
 {
     //Structure for all customer data
-    struct customer
+    typedef struct 
     {
         char customerID[max_length];
         char firstname[max_length];
@@ -544,9 +553,9 @@ void admin_terminal(char *terminal_clear_string)
         float meter_reading[5];
         int meter_size[5];
 
-    };
+    } customer;
 
-    struct customer user; // Declare struct variabile
+    customer user; // Declare struct variabile
     
     int action;
     int found_ID = 1; //Default to false
@@ -776,16 +785,8 @@ jump_admin_actions: ;
 
                         snprintf(strtemp,max_e_length,"Last Meter Reading #%d: %.2f",i+1, user.meter_reading[i]);  
                         fputs(strtemp, customerdbpointer);
+                        fputs("\n\n", customerdbpointer);  
 
-                        //Prevents double line space at the end of user record
-                        if(i != premisesamt-1)
-                        {
-                            fputs("\n\n", customerdbpointer); 
-                        }
-                        else
-                        {
-                            fputs("\n", customerdbpointer); 
-                        }
                     }
                     fputs(data_breakpoint, customerdbpointer);
                     fputs("\n\n", customerdbpointer);
@@ -1468,7 +1469,7 @@ void scanfpassword (char* string_input)
     while(1)
     {
 
-        ch = _getwch();
+        ch = getch();
         if(ch == enter_key) //When user presses enter key
         {
             break;
